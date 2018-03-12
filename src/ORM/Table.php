@@ -351,4 +351,25 @@ class Table extends CakeTable
 
         return new \MongoDB\BSON\ObjectId();
     }
+    
+    
+    /**
+     * @param $aggregateConditions
+     *
+     * @return \Cake\ORM\Entity|ResultSet
+     * @throws \Exception
+     */
+    public function aggregate($aggregateConditions)
+    {
+        $collection = $this->__getCollection();
+        $mongoCursor = $collection->aggregate($aggregateConditions);
+        
+        $alias = $this->getAlias();
+        if ($mongoCursor instanceof \MongoDB\Model\BSONDocument) {
+            return (new Document($mongoCursor, $alias))->cakefy();
+        } elseif (is_array($mongoCursor)) {
+            return $mongoCursor;
+        }
+        return new ResultSet($mongoCursor, $alias);
+    }
 }
