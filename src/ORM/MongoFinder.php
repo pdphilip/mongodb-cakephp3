@@ -263,7 +263,22 @@ class MongoFinder
         $this->_totalRows = (int)((bool)$result);
         return $result;
     }
-
+    
+    /**
+     * return find count
+     * 
+     * @param array $options
+     * @return int
+     * @access public
+     */
+    public function findCount(array $options = [])
+    {
+        $this->__sortOption($options);
+        $count = $this->connection()->count($this->_options['where'], $options);
+        return $count;
+    }
+    
+    
     /**
      * Append sort to options with $this->_options['order']
      * @param array $options

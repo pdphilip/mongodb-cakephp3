@@ -48,7 +48,7 @@ class Table extends CakeTable
      *
      * @param string $type
      * @param array $options
-     * @return \Cake\ORM\Entity|\Cake\ORM\Entity[]|MongoQuery
+     * @return \Cake\ORM\Entity|\Cake\ORM\Entity[]|MongoQuery|int
      * @access public
      * @throws \Exception
      */
@@ -62,6 +62,8 @@ class Table extends CakeTable
             if ($mongoCursor instanceof \MongoDB\Model\BSONDocument) {
                 return (new Document($mongoCursor, $alias))->cakefy();
             } elseif (is_array($mongoCursor)) {
+                return $mongoCursor;
+            }elseif (is_int($mongoCursor)){
                 return $mongoCursor;
             }
             $results = new ResultSet($mongoCursor, $alias);
