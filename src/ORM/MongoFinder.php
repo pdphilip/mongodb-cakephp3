@@ -23,7 +23,7 @@ class MongoFinder
      * @access protected
      */
     protected $_options = [
-        'fields' => [],
+        'projection' => [],
         'where' => [],
     ];
 
@@ -204,6 +204,7 @@ class MongoFinder
     {
         $this->__sortOption($options);
         $this->__limitOption($options);
+        $this->__fieldsOption($options);
         $cursor = $this->connection()->find($this->_options['where'], $options);
         $this->_totalRows = count($cursor);
 
@@ -310,6 +311,23 @@ class MongoFinder
             && !isset($options['skip'])
         ) {
             $options['skip'] = $options['limit'] * ($this->_options['page'] -1);
+        }
+    }
+    
+    /**
+     * Append fields (projections) to options with $this->_options['fields']
+     * @param array $options
+     */
+    private function __fieldsOption(array &$options)
+    {
+        if (!empty($this->_options['fields'])) {
+            $projection = [];
+            foreach ($this->_options['fields'] as $field) {
+                $projection += [$field => true];
+            }
+            if ($projection){
+                $options['projection'] = $projection;
+            }
         }
     }
 
